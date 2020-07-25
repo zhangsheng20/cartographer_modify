@@ -168,7 +168,7 @@ void Node::PublishSlamOdom(const ::ros::WallTimerEvent& unused_timer_event) {
   nav_msgs::Odometry pub_message;
   pub_message.header.frame_id="slam_odom";
   pub_message.pose.pose.position.x=0.1;
-  slam_odom_publisher_.publish(pub_message);
+  //slam_odom_publisher_.publish(pub_message);
 }
 
 ////////////////////////////////////////////////////////////////////
@@ -254,6 +254,16 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
 
     const Rigid3d tracking_to_map =
         trajectory_state.local_to_map * tracking_to_local;
+
+    ////////////////////////////////add
+
+    nav_msgs::Odometry pub_odom;
+    pub_odom.pose.pose=ToGeometryMsgPose(tracking_to_map);
+    pub_odom.header.frame_id="/map";
+    pub_odom.child_frame_id=trajectory_state.trajectory_options.tracking_frame;
+    pub_odom.header.stamp = ros::Time::now();
+    slam_odom_publisher_.publish(pub_odom);
+    //////////////////////////////////    
 
     if (trajectory_state.published_to_tracking != nullptr) {
       if (trajectory_state.trajectory_options.provide_odom_frame) {
