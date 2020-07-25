@@ -150,7 +150,7 @@ class Node {
                          const cartographer_ros_msgs::SensorTopics& topics,
                          int trajectory_id);
   void PublishSubmapList(const ::ros::WallTimerEvent& timer_event);
-  void PublishSlamOdometry(const ::ros::WallTimerEvent& unused_timer_event);
+  void PublishSlamOdom(const ::ros::WallTimerEvent& unused_timer_event);
   void AddExtrapolator(int trajectory_id, const TrajectoryOptions& options);
   void AddSensorSamplers(int trajectory_id, const TrajectoryOptions& options);
   void PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event);
@@ -173,7 +173,7 @@ class Node {
 
   ::ros::NodeHandle node_handle_;
   ::ros::Publisher submap_list_publisher_;
-  ::ros::Publisher pose_velocity_publisher_;
+  ::ros::Publisher slam_odom_publisher_;
   ::ros::Publisher trajectory_node_list_publisher_;
   ::ros::Publisher landmark_poses_list_publisher_;
   ::ros::Publisher constraint_list_publisher_;

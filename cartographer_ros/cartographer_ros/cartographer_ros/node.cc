@@ -94,9 +94,9 @@ Node::Node(
           kSubmapListTopic, kLatestOnlyPublisherQueueSize);
 
 
-/////////////////////////////////////////
-pose_velocity_publisher_=
-      node_handle_.advertise<nav_msgs::Odometry>("SlamOdometryTopic", 100);
+/////////////////////////////////////////add
+slam_odom_publisher_=
+      node_handle_.advertise<nav_msgs::Odometry>("SlamOdomTopic", 100);
     
 /////////////////////////////////////////////////
 
@@ -140,7 +140,7 @@ pose_velocity_publisher_=
       /////////////////////////////////add
   wall_timers_.push_back(node_handle_.createWallTimer(
       ::ros::WallDuration(kConstraintPublishPeriodSec),
-      &Node::PublishSlamOdometry, this));
+      &Node::PublishSlamOdom, this));
       /////////////////////////////////
 }
 
@@ -162,11 +162,13 @@ void Node::PublishSubmapList(const ::ros::WallTimerEvent& unused_timer_event) {
 }
 
 
-///////////////////////////////////////////////////////////////////////////
-void Node::PublishSlamOdometry(const ::ros::WallTimerEvent& unused_timer_event) {
+///////////////////////////////////////////////////////////////////////add
+void Node::PublishSlamOdom(const ::ros::WallTimerEvent& unused_timer_event) {
   carto::common::MutexLocker lock(&mutex_);
   nav_msgs::Odometry pub_message;
-  //submap_list_publisher_.publish(pub_message);
+  pub_message.header.frame_id="slam_odom";
+  pub_message.pose.pose.position.x=0.1;
+  slam_odom_publisher_.publish(pub_message);
 }
 
 ////////////////////////////////////////////////////////////////////
