@@ -15,30 +15,26 @@
 -->
 
 <launch>
-  <param name="/use_sim_time" value="false" />
+  <param name="/use_sim_time" value="true" />
 
   <param name="robot_description"
-    textfile="$(find cartographer_ros)/urdf/my_backpack_3d.urdf" />
-
-  <node name="robot_state_publisher" pkg="robot_state_publisher"
-    type="robot_state_publisher" />
+    textfile="$(find cartographer_ros)/urdf/my_backpack_2d.urdf" /> 
 
   <node name="cartographer_node" pkg="cartographer_ros"
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename my_backpack_3d_localization.lua
-          -load_state_filename $(arg load_state_filename)"
+          -configuration_basename my_rplidar.lua"
       output="screen">
-      <remap from="points2" to="rslidar_points" />
-      <remap from="imu" to="imu_out" />
-
+      <remap from="scan" to="scan" />
   </node>
 
   <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
       type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
 
   <node name="rviz" pkg="rviz" type="rviz" required="true"
-      args="-d $(find cartographer_ros)/configuration_files/demo_3d.rviz" />
+      args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />
   <node name="playbag" pkg="rosbag" type="play"
       args="--clock $(arg bag_filename)" />
+
+
 </launch>
