@@ -95,9 +95,10 @@ Node::Node(
 
 
 /////////////////////////////////////////add
-slam_odom_publisher_=
-      node_handle_.advertise<nav_msgs::Odometry>("SlamOdomTopic", 100);
-    
+laser_odom_publisher_=
+      node_handle_.advertise<nav_msgs::Odometry>("LaserOdomTopic", 100);
+ugv_odom_publisher_  =
+      node_handle_.advertise<nav_msgs::Odometry>("UgvOdomTopic", 100);
 /////////////////////////////////////////////////
 
   trajectory_node_list_publisher_ =
@@ -140,7 +141,10 @@ slam_odom_publisher_=
       /////////////////////////////////add
   wall_timers_.push_back(node_handle_.createWallTimer(
       ::ros::WallDuration(kConstraintPublishPeriodSec),
-      &Node::PublishSlamOdom, this));
+      &Node::PublishLaserOdom, this));
+  wall_timers_.push_back(node_handle_.createWallTimer(
+      ::ros::WallDuration(kConstraintPublishPeriodSec),
+      &Node::PublishUgvOdom, this));  
       /////////////////////////////////
 }
 
@@ -163,14 +167,20 @@ void Node::PublishSubmapList(const ::ros::WallTimerEvent& unused_timer_event) {
 
 
 ///////////////////////////////////////////////////////////////////////add
-void Node::PublishSlamOdom(const ::ros::WallTimerEvent& unused_timer_event) {
+void Node::PublishLaserOdom(const ::ros::WallTimerEvent& unused_timer_event) {
   carto::common::MutexLocker lock(&mutex_);
   nav_msgs::Odometry pub_message;
   pub_message.header.frame_id="slam_odom";
   pub_message.pose.pose.position.x=0.1;
-  //slam_odom_publisher_.publish(pub_message);
+  //laser_odom_publisher_.publish(pub_message);
 }
-
+void Node::PublishUgvOdom(const ::ros::WallTimerEvent& unused_timer_event) {
+  carto::common::MutexLocker lock(&mutex_);
+  nav_msgs::Odometry pub_message;
+  pub_message.header.frame_id="slam_odom";
+  pub_message.pose.pose.position.x=0.1;
+  //laser_odom_publisher_.publish(pub_message);
+}
 ////////////////////////////////////////////////////////////////////
 
 
@@ -256,16 +266,26 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
         trajectory_state.local_to_map * tracking_to_local;
 
     ////////////////////////////////add
-
-    nav_msgs::Odometry pub_odom;
-    pub_odom.pose.pose=ToGeometryMsgPose(tracking_to_map);
-    pub_odom.header.frame_id="/map";
-    pub_odom.child_frame_id=trajectory_state.trajectory_options.tracking_frame;
-    pub_odom.header.stamp = ros::Time::now();
-    slam_odom_publisher_.publish(pub_odom);
+    nav_msgs::Odometry pub_laser_odom;
+    pub_laser_odom.pose.pose=ToGeometryMsgPose(tracking_to_map);
+    pub_laser_odom.header.frame_id="/map";
+    pub_laser_odom.child_frame_id=trajectory_state.trajectory_options.tracking_frame;
+    pub_laser_odom.header.stamp = ros::Time::now();
+    laser_odom_publisher_.publish(pub_laser_odom);
     //////////////////////////////////    
 
+ 
+
     if (trajectory_state.published_to_tracking != nullptr) {
+
+      ////////////////////////////////add
+      nav_msgs::Odometry pub_ugv_odom;
+      pub_ugv_odom.pose.pose=ToGeometryMsgPose( tracking_to_map * (*trajectory_state.published_to_tracking));
+      pub_ugv_odom.header.frame_id="/world";
+      pub_ugv_odom.child_frame_id=trajectory_state.trajectory_options.published_frame;
+      pub_ugv_odom.header.stamp = ros::Time::now();
+      ugv_odom_publisher_.publish(pub_ugv_odom);
+      //////////////////////////////////  
       if (trajectory_state.trajectory_options.provide_odom_frame) {
         std::vector<geometry_msgs::TransformStamped> stamped_transforms;
 
@@ -285,6 +305,7 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
         stamped_transforms.push_back(stamped_transform);
 
         tf_broadcaster_.sendTransform(stamped_transforms);
+
       } else {
         stamped_transform.header.frame_id = node_options_.map_frame;
         stamped_transform.child_frame_id =
