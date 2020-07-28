@@ -66,12 +66,12 @@
   <joint name="ugv_link_joint" type="fixed">
     <parent link="base_link" />
     <child link="ugv_link" />
-    <origin xyz="0 0 2" rpy="0. 0 0" />
+    <origin xyz="0 0 0" rpy="0. 0 0" />
   </joint>
 
 
   <joint name="imu_link_joint" type="fixed">
-    <parent link="base_link" />
+    <parent link="ugv_link" />
     <child link="imu_link" />
     <origin xyz="0 0 0" />
   </joint>
