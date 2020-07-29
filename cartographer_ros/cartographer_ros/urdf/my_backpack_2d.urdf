@@ -58,7 +58,7 @@
   <link name="base_link" />
 
   <joint name="laser_joint" type="fixed">
-    <parent link="base_link" />
+    <parent link="ugv_link" />
     <child link="laser" />
     <origin xyz="0.33 0. 0.6" rpy="0. 0 0" />
   </joint>

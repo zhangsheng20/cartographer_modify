@@ -12,21 +12,14 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
-
-
-
 include "my_rplidar.lua"
 
-TRAJECTORY_BUILDER.pure_localization = true
-POSE_GRAPH.optimize_every_n_nodes = 1
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight=5
-TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 25.
-POSE_GRAPH.constraint_builder.sampling_ratio=5e-1
+POSE_GRAPH.optimize_every_n_nodes = 10.
+POSE_GRAPH.constraint_builder.min_score = 0.5
+POSE_GRAPH.constraint_builder.sampling_ratio=0.2
 
-TRAJECTORY_BUILDER_2D.submaps.num_range_data = 20
-TRAJECTORY_BUILDER_2D.max_range =10
-TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds=2
-TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters=0.2
-TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians = math.rad(0.5)
+TRAJECTORY_BUILDER_2D.max_range =8.
+POSE_GRAPH.global_sampling_ratio=0.001
+
 
 return options
