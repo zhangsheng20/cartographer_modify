@@ -14,12 +14,17 @@
 
 include "my_rplidar.lua"
 
-POSE_GRAPH.optimize_every_n_nodes = 10.
-POSE_GRAPH.constraint_builder.min_score = 0.5
+POSE_GRAPH.optimize_every_n_nodes = 10
+POSE_GRAPH.constraint_builder.min_score = 0.6
 POSE_GRAPH.constraint_builder.sampling_ratio=0.2
+POSE_GRAPH.constraint_builder.loop_closure_rotation_weight = 1e8
+POSE_GRAPH.constraint_builder.ceres_scan_matcher.rotation_weight=100
+POSE_GRAPH.constraint_builder.ceres_scan_matcher.ceres_solver_options.num_threads=4
 
-TRAJECTORY_BUILDER_2D.max_range =8.
-POSE_GRAPH.global_sampling_ratio=0.001
-
-
+TRAJECTORY_BUILDER_2D.use_imu_data = false
+TRAJECTORY_BUILDER_2D.max_range =9
+POSE_GRAPH.global_sampling_ratio=0.002
+POSE_GRAPH.matcher_rotation_weight=1e-1
+POSE_GRAPH.optimization_problem.rotation_weight=3e8
+POSE_GRAPH.optimization_problem.acceleration_weight=1e1
 return options
