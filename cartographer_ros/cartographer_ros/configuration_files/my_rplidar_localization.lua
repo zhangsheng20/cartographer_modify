@@ -13,6 +13,8 @@
 -- limitations under the License.
 
 include "my_rplidar.lua"
+TRAJECTORY_BUILDER.pure_localization = true
+
 
 POSE_GRAPH.optimize_every_n_nodes = 10
 POSE_GRAPH.constraint_builder.min_score = 0.6
