@@ -139,12 +139,12 @@ ugv_odom_publisher_  =
       ::ros::WallDuration(kConstraintPublishPeriodSec),
       &Node::PublishConstraintList, this));
       /////////////////////////////////add
-  wall_timers_.push_back(node_handle_.createWallTimer(
-      ::ros::WallDuration(kConstraintPublishPeriodSec),
-      &Node::PublishLaserOdom, this));
-  wall_timers_.push_back(node_handle_.createWallTimer(
-      ::ros::WallDuration(kConstraintPublishPeriodSec),
-      &Node::PublishUgvOdom, this));  
+  // wall_timers_.push_back(node_handle_.createWallTimer(
+  //     ::ros::WallDuration(kConstraintPublishPeriodSec),
+  //     &Node::PublishLaserOdom, this));
+  // wall_timers_.push_back(node_handle_.createWallTimer(
+  //     ::ros::WallDuration(kConstraintPublishPeriodSec),
+  //     &Node::PublishUgvOdom, this));  
       /////////////////////////////////
 }
 

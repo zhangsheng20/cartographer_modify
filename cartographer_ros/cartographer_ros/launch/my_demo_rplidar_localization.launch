@@ -39,5 +39,5 @@
       args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />
       <node pkg="tf" type="static_transform_publisher" name="world_broadcaster" args="0 0 0 0 0 0 map world 100" />
   <node name="playbag" pkg="rosbag" type="play"
-      args="--clock $(arg bag_filename) --topic $(arg topic_name)" />
+      args="--clock $(arg bag_filename) " />
 </launch>
