@@ -49,7 +49,7 @@ MAP_BUILDER.use_trajectory_builder_2d = true
 TRAJECTORY_BUILDER_2D.use_imu_data = false
 --TRAJECTORY_BUILDER_2D.num_accumulated_range_data = 10
 
-TRAJECTORY_BUILDER_2D.submaps.num_range_data =30
+TRAJECTORY_BUILDER_2D.submaps.num_range_data =20
 TRAJECTORY_BUILDER_2D.min_range = 0.25
 TRAJECTORY_BUILDER_2D.max_range =10
 POSE_GRAPH.optimize_every_n_nodes = 10
@@ -67,6 +67,6 @@ TRAJECTORY_BUILDER_2D.ceres_scan_matcher.ceres_solver_options.num_threads=4
 TRAJECTORY_BUILDER_2D.motion_filter.max_time_seconds=30/TRAJECTORY_BUILDER_2D.submaps.num_range_data
 TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters=2/TRAJECTORY_BUILDER_2D.submaps.num_range_data
 TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians 
-        = math.rad(45/TRAJECTORY_BUILDER_2D.submaps.num_range_data/POSE_GRAPH.optimize_every_n_nodes)
+        = math.rad(75/TRAJECTORY_BUILDER_2D.submaps.num_range_data/POSE_GRAPH.optimize_every_n_nodes)
 
 return options
