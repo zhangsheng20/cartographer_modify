@@ -27,7 +27,7 @@
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
           -configuration_basename my_rplidar_localization_sim.lua
-          -load_state_filename $(arg load_state_filename)"
+          -load_state_filename test001.pbstream" 
       output="screen">
       <remap from="imu" to="imu_out" />
   </node>
