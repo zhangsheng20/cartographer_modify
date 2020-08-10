@@ -19,7 +19,7 @@ options = {
   map_builder = MAP_BUILDER,
   trajectory_builder = TRAJECTORY_BUILDER,
   map_frame = "map",
-  tracking_frame = "base_link",
+  tracking_frame = "imu_link",
   published_frame = "base_link",
   odom_frame = "odom",
   provide_odom_frame = false,
@@ -42,12 +42,22 @@ options = {
   landmarks_sampling_ratio = 1.,
 }
 
-TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 160
+
+TRAJECTORY_BUILDER_2D.submaps.num_range_data =20
+TRAJECTORY_BUILDER_2D.min_range = 0.25
+TRAJECTORY_BUILDER_2D.max_range =10
+
+TRAJECTORY_BUILDER_3D.num_accumulated_range_data = 30
+TRAJECTORY_BUILDER_3D.max_range=15
+TRAJECTORY_BUILDER_3D.use_online_correlative_scan_matching=true
+TRAJECTORY_BUILDER_3D.ceres_scan_matcher.only_optimize_yaw=true
+TRAJECTORY_BUILDER_3D.motion_filter.max_time_seconds=30/TRAJECTORY_BUILDER_2D.submaps.num_range_data
+TRAJECTORY_BUILDER_3D.motion_filter.max_distance_meters=2/TRAJECTORY_BUILDER_2D.submaps.num_range_data
 
 MAP_BUILDER.use_trajectory_builder_3d = true
 MAP_BUILDER.num_background_threads = 7
 POSE_GRAPH.optimization_problem.huber_scale = 5e2
-POSE_GRAPH.optimize_every_n_nodes = 320
+POSE_GRAPH.optimize_every_n_nodes = 0
 POSE_GRAPH.constraint_builder.sampling_ratio = 0.03
 POSE_GRAPH.optimization_problem.ceres_solver_options.max_num_iterations = 10
 POSE_GRAPH.constraint_builder.min_score = 0.62
