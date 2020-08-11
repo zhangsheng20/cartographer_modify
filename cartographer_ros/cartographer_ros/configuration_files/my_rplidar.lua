@@ -69,4 +69,12 @@ TRAJECTORY_BUILDER_2D.motion_filter.max_distance_meters=2/TRAJECTORY_BUILDER_2D.
 TRAJECTORY_BUILDER_2D.motion_filter.max_angle_radians 
         = math.rad(75/TRAJECTORY_BUILDER_2D.submaps.num_range_data/POSE_GRAPH.optimize_every_n_nodes)
 
+if(TRAJECTORY_BUILDER_2D.use_imu_data)
+then
+  use_online_correlative_scan_matching = false
+  TRAJECTORY_BUILDER_2D.ceres_scan_matcher.translation_weight=1
+  TRAJECTORY_BUILDER_2D.ceres_scan_matcher.rotation_weight = 1000.
+  TRAJECTORY_BUILDER_2D.ceres_scan_matcher.ceres_solver_options.num_threads=4
+end
+
 return options
