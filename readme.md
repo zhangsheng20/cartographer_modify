@@ -32,6 +32,8 @@ run cartographer:
 run pure_localization :
   roslaunch cartographer_ros my_rplidar_localization.launch  load_state_filename:=${HOME}/.ros/test001.pbstream
 
+  roslaunch cartographer_ros my_rplidar_localization.launch  load_state_filename:=${HOME}/.ros/colume_obs.pbstream
+
 run in simulator of yzchen:
   roslaunch cartographer_ros my_rplidar_sim.launch 
 
