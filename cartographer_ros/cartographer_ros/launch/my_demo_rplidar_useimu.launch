@@ -15,28 +15,38 @@
 -->
 
 <launch>
-  <param name="/use_sim_time" value="false" />
+  <param name="/use_sim_time" value="true" />
+  <arg name="no_rviz" default="false"/>
+
+  <group unless="$(arg no_rviz)">
+    <node name="rviz" pkg="rviz" type="rviz" required="true"
+        args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />
+
+    <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
+        type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
+
+    
+  </group>
+
 
   <param name="robot_description"
     textfile="$(find cartographer_ros)/urdf/my_backpack_2d.urdf" /> 
-
+ 
   <node name="robot_state_publisher" pkg="robot_state_publisher"
     type="robot_state_publisher" />
 
   <node name="cartographer_node" pkg="cartographer_ros"
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_ros)/configuration_files
-          -configuration_basename my_rplidar_localization.lua
-          -load_state_filename $(arg load_state_filename)"
+          -configuration_basename my_rplidar_useimu.lua"
       output="screen">
       <remap from="imu" to="/mavros/imu/data" />
   </node>
 
-  <node name="cartographer_occupancy_grid_node" pkg="cartographer_ros"
-      type="cartographer_occupancy_grid_node" args="-resolution 0.05" />
 
-  <node name="rviz" pkg="rviz" type="rviz" required="true"
-      args="-d $(find cartographer_ros)/configuration_files/demo_2d.rviz" />
-     
+  <node name="playbag" pkg="rosbag" type="play"
+      args=" --rate=1.0 --clock $(arg bag_filename) " />
+  <node pkg="tf" type="static_transform_publisher" 
+        name="world_broadcaster" args="0 0 0 0 0 0 map world 100" />
 
 </launch>

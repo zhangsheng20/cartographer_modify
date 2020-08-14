@@ -243,6 +243,8 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
       }
       extrapolator.AddPose(trajectory_state.local_slam_data->time,
                            trajectory_state.local_slam_data->local_pose);
+
+
     }
 
     geometry_msgs::TransformStamped stamped_transform;
@@ -254,8 +256,10 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
         FromRos(ros::Time::now()), extrapolator.GetLastExtrapolatedTime());
     stamped_transform.header.stamp = ToRos(now);
 
-    const Rigid3d tracking_to_local = [&] {
-      if (trajectory_state.trajectory_options.publish_frame_projected_to_2d) {
+    const Rigid3d tracking_to_local = [&] 
+    {
+      if (trajectory_state.trajectory_options.publish_frame_projected_to_2d)
+      {
         return carto::transform::Embed3D(
             carto::transform::Project2D(extrapolator.ExtrapolatePose(now)));
       }
@@ -263,14 +267,15 @@ void Node::PublishTrajectoryStates(const ::ros::WallTimerEvent& timer_event) {
     }();
 
     const Rigid3d tracking_to_map =
-        trajectory_state.local_to_map * tracking_to_local;
+        trajectory_state.local_to_map * tracking_to_local;//local:submap 
 
     ////////////////////////////////add
     nav_msgs::Odometry pub_laser_odom;
     pub_laser_odom.pose.pose=ToGeometryMsgPose(tracking_to_map);
     pub_laser_odom.header.frame_id="/map";
     pub_laser_odom.child_frame_id=trajectory_state.trajectory_options.tracking_frame;
-    pub_laser_odom.header.stamp = ros::Time::now();
+    //pub_laser_odom.header.stamp = ros::Time::now();
+    pub_laser_odom.header.stamp=ToRos(now);
     laser_odom_publisher_.publish(pub_laser_odom);
     //////////////////////////////////    
 
